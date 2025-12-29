@@ -1,0 +1,1394 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>مؤشرات الأداة الإستراتيجي</title>
+<link rel="icon" href="h1.png">
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy: #0b2b44;
+  --gold: #c9a04b;
+  --gold-2: #b5862f;
+  --muted: #f5f5f7;
+  --text: #0f1720;
+}
+
+/* Reset */
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Tajawal',sans-serif;background:var(--muted);color:var(--text);opacity:0;transition:opacity 0.6s;}
+body.fade-in{opacity:1;}
+a{text-decoration:none;color:inherit;}
+
+/* Header */
+.header{position:fixed;top:0;left:0;right:0;z-index: 100; background:linear-gradient(180deg,rgba(11,43,68,0.95),rgba(11,43,68,0.85));color:#fff;border-bottom:1px solid rgba(255,255,255,0.04); transition: all 0.3s;}
+.container{max-width:1200px;margin:auto;padding:0 20px;}
+.header-inner{display:flex;align-items:center;justify-content:space-between;min-height:74px; padding: 10px 0;}
+.brand{display:flex;align-items:center;gap:12px;}
+.logo img{width:40px;height:40px;object-fit:contain;transition: transform 0.3s;}
+.logo img:hover{transform: scale(1.08);}
+.brand h1{font-size:18px;margin:0;}
+.brand div{font-size:12px;opacity:0.9;}
+
+
+
+
+
+/* Stats Section */
+.stats-white{
+  background:#fff;
+  padding: 40px 20px 100px;
+  margin-top: 74px;
+}
+section {
+  scroll-margin-top: 100px; /* يجعل القسم يظهر أسفل الهيدر عند التمرير */
+}
+
+
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:30px;max-width:1200px;margin:auto;}
+.stat-card{background:#fff;border-radius:20px;padding:35px 25px;text-align:center;box-shadow:0 18px 50px rgba(11,43,68,.08);transition:.3s ease;}
+.stat-card:hover{transform:translateY(-6px);box-shadow:0 30px 70px rgba(11,43,68,.14);}
+.stat-card h3{margin-bottom:30px;color:var(--navy);font-size:20px;}
+.stat-number{font-size:75px;font-weight:800;color: #666;}
+.stat-number1{font-size:75px;font-weight:800;color: #072233;}
+.double-chart{display:flex;justify-content:space-between;gap:20px;}
+.circle-wrap{position:relative;width:120px;height:120px;margin:auto;}
+.circle-wrap canvas{width:100%!important;height:100%!important;}
+.circle-text{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:20px;color:var(--navy);}
+.circle-label{margin-top:8px;font-size:14px;color:#666;}
+.circle-wrap.big{width:260px;height:260px;}
+.circle-wrap.big .circle-text{font-size:44px;color:var(--gold);}
+
+/* --- New Stats Layout --- */
+.stats-layout-container {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 40px;
+  margin-top: 50px;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Horizontal Percent Indicators */
+.horizontal-percent-container{flex: 1; min-width: 300px; max-width: 600px; display:flex;flex-direction:column;gap:16px;}
+.percent-row{display:flex;align-items:center;gap:12px;}
+.percent-code{font-weight:700;color:var(--navy);width:40px;}
+.percent-bar{flex:1;height:16px;background:#e9edf1;border-radius:20px;overflow:hidden;}
+.percent-fill{height:100%;width:0;border-radius:20px;background:linear-gradient(to left, var(--navy), var(--gold));transition:width 1.5s ease-out;}
+.percent-value{font-weight:700;font-size:13px;color:#6f7a83;min-width:40px;text-align:right;}
+
+/* Global Chart */
+.global-chart{flex: 1; min-width: 300px; max-width: 400px; text-align:center;}
+.global-chart h2{margin-bottom:30px;color:var(--navy);font-size:26px;}
+
+/* --- Time Series Chart --- */
+.chart-card {
+  background: #fff;
+  border-radius: 20px;
+  padding: 30px;
+  box-shadow: 0 18px 50px rgba(11, 43, 68, .08);
+}
+.charts-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px;
+  max-width: 1200px;
+  margin: 60px auto 0;
+}
+@media (max-width: 1024px) {
+  .charts-container { grid-template-columns: 1fr; }
+}
+.chart-card h2 { color: var(--navy); font-size: 22px; margin-bottom: 25px; }
+.chart-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; margin-bottom: 25px; }
+.chart-header h2 { margin-bottom: 0; }
+.range-selector { display: flex; gap: 8px; }
+.range-btn {
+  background: #e9edf1;
+  border: 1px solid #dde3ea;
+  color: #556270;
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-family: 'Tajawal', sans-serif;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.range-btn:hover { background: #dce4ed; }
+.range-btn.active { background: var(--navy); color: #fff; border-color: var(--navy); font-weight: 700; }
+
+/* Custom Dropdown for Months */
+.custom-select-wrapper { position: relative; display: inline-block; }
+.custom-options {
+  display: none; position: absolute; top: 110%; left: 0;
+  background: #fff; border: 1px solid #dde3ea; border-radius: 12px;
+  box-shadow: 0 6px 16px rgba(11,43,68,0.15); z-index: 9999;
+  max-height: 200px; overflow-y: auto; min-width: 120px;
+}
+.custom-options.show { display: block; }
+.custom-option { padding: 8px 12px; cursor: pointer; font-size: 14px; color: var(--navy); transition: background 0.2s; text-align: right; }
+.custom-option:hover { background: #f5f5f7; }
+.custom-options::-webkit-scrollbar { width: 5px; }
+.custom-options::-webkit-scrollbar-thumb { background: #ccc; border-radius: 3px; }
+
+/* Loading Spinner */
+#loading-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.95);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.5s, visibility 0.5s; /* توحيد مدة الاختفاء مع الجافاسكريبت */
+}
+.spinner {
+  width: 60px;
+  height: 60px;
+  border: 6px solid #e9edf1; /* Light grey */
+  border-top-color: var(--navy); /* Navy color */
+  border-radius: 50%;
+  animation: spin 2s linear infinite; /* إبطاء سرعة الدوران إلى ثانيتين */
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* --- Responsive Design Improvements --- */
+@media (max-width: 992px) {
+  .stats-layout-container {
+    flex-direction: column-reverse;
+    align-items: center;
+  }
+  .horizontal-percent-container, .global-chart {
+    max-width: 100%;
+    width: 100%;
+  }
+  .global-chart {
+    margin-bottom: 40px;
+  }
+}
+
+@media (max-width: 768px) {
+  .header-inner {
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    gap: 10px;
+  }
+  .brand {
+    flex-direction: column;
+    gap: 5px;
+  }
+  .stats-white {
+    margin-top: 130px; /* Increased margin for taller mobile header */
+    padding-top: 30px;
+  }
+  .stat-number, .stat-number1 {
+    font-size: 48px;
+  }
+  .chart-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
+  .range-selector {
+    flex-wrap: wrap;
+    width: 100%;
+    gap: 8px;
+  }
+  .range-btn {
+    flex: 1 0 auto;
+    text-align: center;
+  }
+  .custom-select-wrapper { flex: 1 0 auto; }
+  .custom-select-wrapper .range-btn { width: 100%; }
+  
+  .circle-wrap.big { width: 220px; height: 220px; }
+  .circle-wrap.big .circle-text { font-size: 36px; }
+}
+
+/* KPI Link Styles */
+.kpi-link { cursor: pointer; transition: color 0.3s; }
+.kpi-link:hover { color: var(--gold); text-decoration: underline; }
+
+
+</style>
+</head>
+<body>
+<div id="loading-overlay"><div class="spinner"></div></div>
+
+<!-- Header -->
+<header class="header">
+  <div class="container">
+    <div class="header-inner">
+      <div class="brand">
+        <div class="logo"><a href="index.html"><img src="a4.png" alt="شعار الشركة"></a></div>
+        <div>
+          <h1>شركة عبدالاله العمار و شركاؤه</h1>
+          <div>للمحاماة و الاستشارات القانونية</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+
+<!-- Stats Section -->
+<section class="stats-white">
+  <h1 style="text-align:center; color: #0b2b44; margin-bottom: 50px;">مؤشرات الأداة الإستراتيجي</h1>
+
+  <!-- Charts Container -->
+  <div class="charts-container">
+    <!-- Time Series Chart for KPI 001 -->
+    <div class="chart-card">
+      <div class="chart-header" >
+        <h2><a href="001.html" class="kpi-link">مؤشر الأداء المالي (001)</a></h2>
+        <div class="range-selector"  data-chart="financialGrowthChart">
+          <button class="range-btn" data-range="12">الكل</button>
+          <button class="range-btn" data-range="9">9 شهور</button>
+          <button class="range-btn active" data-range="6">6 شهور</button>
+            <button class="range-btn" data-range="3">3 شهور</button>
+          <button class="range-btn" data-range="1">شهر</button>
+          <div class="custom-select-wrapper">
+            <button class="range-btn select-month-btn">شهر محدد ▾</button>
+            <div class="custom-options"></div>
+          </div>
+        </div>
+      </div>
+      <canvas id="financialGrowthChart"></canvas>
+    </div>
+
+    <!-- Time Series Chart for KPI 002 -->
+    <div class="chart-card">
+      <div class="chart-header">
+          <h2><a href="002.html" class="kpi-link">معدل نمو قاعدة العملاء (002)</a></h2>
+          <div class="range-selector"  data-chart="customerGrowthChart">
+            <button class="range-btn" data-range="12">الكل</button>
+            <button class="range-btn" data-range="9">9 شهور</button>
+            <button class="range-btn active" data-range="6">6 شهور</button>
+              <button class="range-btn" data-range="3">3 شهور</button>
+          <button class="range-btn" data-range="1">شهر</button>
+          <div class="custom-select-wrapper">
+            <button class="range-btn select-month-btn">شهر محدد ▾</button>
+            <div class="custom-options"></div>
+          </div></div>
+      </div>
+      <canvas id="customerGrowthChart"></canvas>
+    </div>
+  </div>
+
+  <!-- Charts Container for 003 & 004 -->
+  <div class="charts-container">
+    <!-- Customer Satisfaction Chart (KPI 003) -->
+    <div class="chart-card">
+      <div class="chart-header" >
+        <h2><a href="003.html" class="kpi-link">معدل رضا العملاء (003)</a></h2>
+        <div class="range-selector" data-chart="satisfactionChart">        <button class="range-btn" data-range="12">الكل</button>
+          <button class="range-btn" data-range="9">9 شهور</button><button class="range-btn active" data-range="6">6 شهور</button><button class="range-btn" data-range="3">3 شهور</button><button class="range-btn" data-range="1">شهر</button>
+          <div class="custom-select-wrapper">
+            <button class="range-btn select-month-btn">شهر محدد ▾</button>
+            <div class="custom-options"></div>
+          </div></div>      </div>
+      <canvas id="satisfactionChart"></canvas>
+    </div>
+  
+    <!-- Conversion Rate Chart (KPI 004) -->
+    <div class="chart-card">
+      <div class="chart-header">
+        <h2><a href="004.html" class="kpi-link">معدل التحويل (004)</a></h2><div class="range-selector" data-chart="conversionRateChart"><button class="range-btn" data-range="12">الكل</button><button class="range-btn" data-range="9">9 شهور</button><button class="range-btn active" data-range="6">6 شهور</button><button class="range-btn" data-range="3">3 شهور</button><button class="range-btn" data-range="1">شهر</button>
+        <div class="custom-select-wrapper">
+            <button class="range-btn select-month-btn">شهر محدد ▾</button>
+            <div class="custom-options"></div>
+          </div></div>
+      </div>
+      <canvas id="conversionRateChart"></canvas>
+    </div>
+  </div>
+
+  <!-- Charts Container for 005 & 006 -->
+  <div class="charts-container">
+    <!-- Internal Operations Compliance Chart (KPI 005) -->
+    <div class="chart-card">
+      <div class="chart-header" >
+        <h2><a href="005.html" class="kpi-link"> العمليات الداخلية (005)</a></h2>
+        <div class="range-selector" data-chart="complianceChart">        <button class="range-btn" data-range="12">الكل</button><button class="range-btn" data-range="9">9 شهور</button><button class="range-btn active" data-range="6">6 شهور</button><button class="range-btn" data-range="3">3 شهور</button><button class="range-btn" data-range="1">شهر</button>
+        <div class="custom-select-wrapper">
+            <button class="range-btn select-month-btn">شهر محدد ▾</button>
+            <div class="custom-options"></div>
+          </div></div>
+      </div>
+      <canvas id="complianceChart"></canvas>
+    </div>
+    <!-- Knowledge System Chart (KPI 006) -->
+    <div class="chart-card">
+      <div class="chart-header" >
+        <h2><a href="006.html" class="kpi-link">نظام المعرفة المؤسسية (006)</a></h2>
+        <div class="range-selector" data-chart="knowledgeSystemChart">        <button class="range-btn" data-range="12">الكل</button><button class="range-btn" data-range="9">9 شهور</button><button class="range-btn active" data-range="6">6 شهور</button><button class="range-btn" data-range="3">3 شهور</button><button class="range-btn" data-range="1">شهر</button>
+        <div class="custom-select-wrapper">
+            <button class="range-btn select-month-btn">شهر محدد ▾</button>
+            <div class="custom-options"></div>
+          </div></div>
+      </div>
+      <canvas id="knowledgeSystemChart"></canvas>
+    </div>
+  </div>
+  <!-- Charts Container for 007 & 008 -->
+  <div class="charts-container">
+    <!-- Growth and Development Chart (KPI 007) -->
+    <div class="chart-card">
+      <div class="chart-header">
+        <h2><a href="007.html" class="kpi-link">النمو والتطوير (007)</a></h2>
+        <div class="range-selector" data-chart="developmentChart">        <button class="range-btn" data-range="12">الكل</button><button class="range-btn" data-range="9">9 شهور</button><button class="range-btn active" data-range="6">6 شهور</button><button class="range-btn" data-range="3">3 شهور</button><button class="range-btn" data-range="1">شهر</button>
+        <div class="custom-select-wrapper">
+            <button class="range-btn select-month-btn">شهر محدد ▾</button>
+            <div class="custom-options"></div>
+          </div></div>      </div>
+      <canvas id="developmentChart"></canvas>
+    </div>
+    <!-- Internal Communication Chart (KPI 008) -->
+    <div class="chart-card">
+      <div class="chart-header">
+        <h2><a href="008.html" class="kpi-link">التواصل الداخلي (008)</a></h2>
+        <div class="range-selector" data-chart="communicationChart">        <button class="range-btn" data-range="12">الكل</button><button class="range-btn" data-range="9">9 شهور</button><button class="range-btn active" data-range="6">6 شهور</button><button class="range-btn" data-range="3">3 شهور</button><button class="range-btn" data-range="1">شهر</button>
+        <div class="custom-select-wrapper">
+            <button class="range-btn select-month-btn">شهر محدد ▾</button>
+            <div class="custom-options"></div>
+          </div></div>
+      </div>
+      <canvas id="communicationChart"></canvas>
+    </div>
+  </div>
+
+  <!-- Charts Container for 009 & 010 -->
+  <div class="charts-container">
+    <!-- Qualified Reach Growth Chart (KPI 009) -->
+    <div class="chart-card">
+      <div class="chart-header" >
+        <h2><a href="009.html" class="kpi-link">الوصول المؤهل للجمهور (009)</a></h2>
+        <div class="range-selector" data-chart="reachGrowthChart">        <button class="range-btn" data-range="12">الكل</button><button class="range-btn" data-range="9">9 شهور</button><button class="range-btn active" data-range="6">6 شهور</button><button class="range-btn" data-range="3">3 شهور</button><button class="range-btn" data-range="1">شهر</button>
+        <div class="custom-select-wrapper">
+            <button class="range-btn select-month-btn">شهر محدد ▾</button>
+            <div class="custom-options"></div>
+          </div></div>
+      </div>
+      <canvas id="reachGrowthChart"></canvas>
+    </div>
+  
+    <!-- Media Production Chart (KPI 010) -->
+    <div class="chart-card">
+      <div class="chart-header">
+        <h2><a href="010.html" class="kpi-link">إنتاج المحتوى الإعلامي (010)</a></h2><div class="range-selector" data-chart="mediaProductionChart"><button class="range-btn" data-range="12">الكل</button><button class="range-btn" data-range="9">9 شهور</button><button class="range-btn active" data-range="6">6 شهور</button><button class="range-btn" data-range="3">3 شهور</button><button class="range-btn" data-range="1">شهر</button>
+        <div class="custom-select-wrapper">
+            <button class="range-btn select-month-btn">شهر محدد ▾</button>
+            <div class="custom-options"></div>
+          </div></div>
+      </div>
+      <canvas id="mediaProductionChart"></canvas>
+    </div>
+  </div>
+
+  <div class="stats-layout-container" style="margin-top: 60px;">
+    <!-- Horizontal Percent Indicators (Right Side) -->
+    <div class="horizontal-percent-container">
+      <div class="percent-row" data-kpi="financialGrowthChart">
+        <span class="percent-code">001</span>
+        <div class="percent-bar"><div class="percent-fill"></div></div>
+        <span class="percent-value">0%</span>
+      </div>
+      <div class="percent-row" data-kpi="customerGrowthChart">
+        <span class="percent-code">002</span>
+        <div class="percent-bar"><div class="percent-fill"></div></div>
+        <span class="percent-value">0%</span>
+      </div>
+      <div class="percent-row" data-kpi="satisfactionChart">
+        <span class="percent-code">003</span>
+        <div class="percent-bar"><div class="percent-fill"></div></div>
+        <span class="percent-value">0%</span>
+      </div>
+      <div class="percent-row" data-kpi="conversionRateChart">
+        <span class="percent-code">004</span>
+        <div class="percent-bar"><div class="percent-fill"></div></div>
+        <span class="percent-value">0%</span>
+      </div>
+      <div class="percent-row" data-kpi="complianceChart">
+        <span class="percent-code">005</span>
+        <div class="percent-bar"><div class="percent-fill"></div></div>
+        <span class="percent-value">0%</span>
+      </div>
+      <div class="percent-row" data-kpi="knowledgeSystemChart">
+        <span class="percent-code">006</span>
+        <div class="percent-bar"><div class="percent-fill"></div></div>
+        <span class="percent-value">0%</span>
+      </div>
+      <div class="percent-row" data-kpi="developmentChart">
+        <span class="percent-code">007</span>
+        <div class="percent-bar"><div class="percent-fill"></div></div>
+        <span class="percent-value">0%</span>
+      </div>
+      <div class="percent-row" data-kpi="communicationChart">
+        <span class="percent-code">008</span>
+        <div class="percent-bar"><div class="percent-fill"></div></div>
+        <span class="percent-value">0%</span>
+      </div>
+      <div class="percent-row" data-kpi="reachGrowthChart">
+        <span class="percent-code">009</span>
+        <div class="percent-bar"><div class="percent-fill"></div></div>
+        <span class="percent-value">0%</span>
+      </div>
+      <div class="percent-row" data-kpi="mediaProductionChart">
+        <span class="percent-code">010</span>
+        <div class="percent-bar"><div class="percent-fill"></div></div>
+        <span class="percent-value">0%</span>
+      </div>
+    </div>
+
+    <!-- Global Chart (Left Side) -->
+    <div class="global-chart">
+      <h2>نسبة تحقيق جميع الأهداف</h2>
+      <div class="circle-wrap big"><canvas id="totalChart"></canvas><div class="circle-text" id="totalPercent">0%</div></div>
+    </div>
+  </div>
+
+  <div class="stats-grid" style="margin-top: 60px;">
+    <div class="stat-card">
+      <h3>القضايا و الخدمات المنجزة</h3>
+      <div class="stat-number" id="completedCasesValue">0</div>
+    </div>
+    <div class="stat-card">
+      <h3>القضايا و الخدمات القائمة</h3>
+      <div class="stat-number1" id="ongoingCasesValue">0</div>
+    </div>
+    <div class="stat-card">
+      <h3>مؤشر رضا العملاء</h3>
+      <div class="double-chart" style="justify-content: center;">
+        <div>
+          <div class="circle-wrap"><canvas id="ach3"></canvas><div class="circle-text">0%</div></div>
+          <div class="circle-label">التحقيق</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // --- Global Variables ---
+  const secureApiUrl = 'https://script.google.com/macros/s/AKfycbwaGXmzHW8qZLgaLC8YuVvYSO4l4miBTkx8NAPu0HU534NSU-24gZXFKrAIacOBzo2A/exec';
+  let chartDataStore = {};
+
+  // --- Helper Functions ---
+  function drawCircle(id, value, color) {
+    const element = document.getElementById(id);
+    if (!element) return;
+
+    // تدمير الرسم البياني السابق إذا كان موجودًا لمنع التداخل والتسريب في الذاكرة
+    const existingChart = Chart.getChart(element);
+    if (existingChart) {
+      existingChart.destroy();
+    }
+
+    const ctx = element.getContext('2d');
+
+    let chartColor = color;
+
+    // إنشاء تدرج لوني خاص للدائرة الكبيرة
+    if (id === 'totalChart') {
+      const gradient = ctx.createLinearGradient(0, 0, element.width, 0);
+      gradient.addColorStop(0, '#0b2b44'); // كحلي
+      gradient.addColorStop(1, '#c9a04b'); // ذهبي
+      chartColor = gradient;
+    }
+
+    new Chart(element, {
+      type: 'doughnut',
+      data: {
+        datasets: [{
+          data: [value, 100 - value],
+          backgroundColor: [chartColor, '#ededed'],
+          borderWidth: 0
+        }]
+      },
+      options: { cutout: '75%', animation: { duration: 1300 }, responsive: true, plugins: { legend: { display: false }, tooltip: { enabled: false } } }
+    });
+  }
+
+    // --- Function to link chart data to percent bars ---
+    function linkKpiDataToBars() {
+      const percentRows = document.querySelectorAll('.percent-row[data-kpi]');
+      percentRows.forEach(row => {
+        const kpiId = row.dataset.kpi;
+        const kpiData = chartDataStore[kpiId];
+        if (!kpiData) return;
+
+        let displayValue = 0;
+        
+        // البحث عن آخر قيمة تم إدخالها فعلياً
+        // نستثني الصفر للمؤشرات النسبية (مثل 001 و 003) لأنه غالباً يعني عدم وجود بيانات في الشيت
+        // بينما نقبله في مؤشرات العد (مثل عدد المشكلات 008)
+        const allowZeroKPIs = ['financialGrowthChart', 'mediaProductionChart', 'knowledgeSystemChart', 'developmentChart'];
+        const shouldFilterZero = !allowZeroKPIs.includes(kpiId);
+
+        const validData = kpiData.data.filter(v => v !== null && v !== undefined && (!shouldFilterZero || v !== 0));
+
+        // FIX: If no valid data exists, set percentage to 0 to avoid incorrect 100% for inverse KPIs
+        if (validData.length === 0) {
+          row.dataset.value = 0;
+          return;
+        }
+
+        // تحديد المؤشرات التي يجب حساب المتوسط لها (النسب المئوية غير التراكمية)
+        const kpisToAverage = ['satisfactionChart', 'complianceChart', 'conversionRateChart', 'communicationChart'];
+        // تحديد المؤشرات التراكمية التي يجب جمع قيمها (مثل 006، 007، 010)
+        const kpisToSum = [
+          'financialGrowthChart', 'customerGrowthChart', 'knowledgeSystemChart', 
+          'developmentChart', 'reachGrowthChart', 
+          'mediaProductionChart'
+        ];
+        
+        let latestValue = 0;
+
+        if (kpisToSum.includes(kpiId) && validData.length > 0) {
+          // حساب المجموع للمؤشرات التراكمية
+          latestValue = validData.reduce((a, b) => a + b, 0);
+        } else if (kpisToAverage.includes(kpiId) && validData.length > 0) {
+          // حساب المتوسط للمؤشرات النسبية
+          latestValue = validData.reduce((a, b) => a + b, 0) / validData.length;
+        } else if (validData.length > 0) {
+          // أخذ آخر قيمة للمؤشرات العددية أو التراكمية
+          latestValue = validData[validData.length - 1];
+        }
+
+        // For KPIs with a target, calculate the percentage of achievement
+        if (kpiData.target) {
+            // Higher is better
+            // تجنب القسمة على صفر في حال كان الهدف 0، وحساب نسبة الإنجاز بناءً على الهدف
+            const target = kpiData.target === 0 ? 1 : kpiData.target;
+            displayValue = Math.round((latestValue / target) * 100);
+        } else {
+            displayValue = Math.round(latestValue);
+        }
+
+        // التأكد من أن القيمة بين 0 و 100 لضمان عرض الشريط بشكل صحيح (خاصة في حال النمو السلبي)
+        row.dataset.value = Math.max(0, Math.min(displayValue, 100));
+      });
+    }
+
+  async function fetchDataAndInit() {
+    try {
+      const response = await fetch(secureApiUrl);
+      if (!response.ok) {
+        throw new Error('Network response was not ok.');
+      }
+      
+      const jsonData = await response.json();
+      
+      // --- تشخيص الأخطاء ---
+      // إذا أرجع السكربت خطأ، اعرضه في الصفحة
+      if (jsonData.error) {
+        throw new Error('Google Apps Script Error: ' + jsonData.error);
+      }
+
+      // Process data and create chartDataStore
+      processKpiData(jsonData);
+
+      // Link data to the percentage bars
+      linkKpiDataToBars();
+
+      // Populate month dropdowns
+      populateMonthDropdowns();
+
+      // Initialize all charts after fetching data
+      initializeAllCharts();
+
+      // Animate bars after data is ready
+      animateBarsOnScroll();
+    } catch (error) {
+      console.error('Failed to fetch or process Google Sheets data:', error);
+      // عرض رسالة خطأ واضحة للمستخدم في الصفحة
+      const container = document.querySelector('.stats-white');
+      if (container) {
+        container.innerHTML = `<div style="text-align:center; padding: 60px 20px; color: #d9534f; background: #f2dede; border: 1px solid #ebccd1; border-radius: 15px; max-width: 800px; margin: 40px auto;"><h2>حدث خطأ في جلب البيانات</h2><p style="margin-top: 15px;">الرسالة: ${error.message}</p><p style="margin-top: 10px;"><b>يرجى التأكد من صحة إعدادات ملف Google Sheet وصلاحيات الوصول للسكربت.</b></p></div>`;
+      }
+    } finally {
+      // إخفاء شاشة التحميل سواء نجحت العملية أو فشلت
+      const loadingOverlay = document.getElementById('loading-overlay');
+      if (loadingOverlay) {
+        loadingOverlay.style.opacity = '0';
+        // استخدام visibility لضمان عدم تفاعل المستخدم معها بعد إخفائها
+        setTimeout(() => { loadingOverlay.style.visibility = 'hidden'; }, 500);
+      }
+    }
+  }
+
+  function updateSummaryCards() {
+    const satisfactionData = chartDataStore['satisfactionChart'];
+    if (satisfactionData) {
+      // البحث عن آخر قيمة تم إدخالها فعلياً (مع تجاهل الصفر لأنه يدل على شهر فارغ)
+      const validData = satisfactionData.data.filter(v => v !== null && v !== undefined && v !== 0);      
+      // حساب متوسط رضا العملاء بدلاً من أخذ آخر قيمة فقط
+      const achievement = validData.length > 0 ? validData.reduce((a, b) => a + b, 0) / validData.length : 0;
+      const roundedAchievement = Math.round(achievement);
+
+      document.querySelector('#ach3 + .circle-text').textContent = `${roundedAchievement}%`;
+      drawCircle('ach3', roundedAchievement, '#c9a04b');
+    }
+
+    // Update summary numbers for cases
+    // نقرأ البيانات من الأعمدة الجديدة في الشيت (completedCases و ongoingCases)
+    const completedKPI = chartDataStore['completedCases'];
+    const ongoingKPI = chartDataStore['ongoingCases'];
+
+    if (completedKPI && completedKPI.data.length > 0) {
+        // نأخذ آخر قيمة مسجلة في العمود
+        // البحث عن آخر قيمة تم إدخالها فعلياً (تجاهل الصفر لأنه غالباً ناتج عن معادلات في الشيت للأشهر القادمة)
+        const validData = completedKPI.data.filter(v => v !== null && v !== undefined && v !== 0);
+        const val = validData.length > 0 ? validData[validData.length - 1] : 0;
+        document.getElementById('completedCasesValue').textContent = val.toLocaleString('en-US');
+    }
+    if (ongoingKPI && ongoingKPI.data.length > 0) {
+        const validData = ongoingKPI.data.filter(v => v !== null && v !== undefined && v !== 0);
+        const val = validData.length > 0 ? validData[validData.length - 1] : 0;
+        document.getElementById('ongoingCasesValue').textContent = val.toLocaleString('en-US');
+    }
+  }
+
+  function processKpiData(jsonData) {
+    const dataLines = jsonData.kpiData;
+    const targetLines = jsonData.kpiTargets;
+
+    const headers = dataLines.shift();
+
+    // تخطي الصف الثاني (صف العناوين الوصفية/الأكواد)
+    // هذا يسمح لك بإضافة صف جديد في الإكسل تحت العناوين البرمجية لتكتب فيه (001 - المالي) للتوضيح
+    if (dataLines.length > 0) dataLines.shift();
+
+    // خريطة لربط رموز المؤشرات (001, 002...) بالمعرفات البرمجية
+    const idMapping = {
+      '001': 'financialGrowthChart',
+      '002': 'customerGrowthChart',
+      '003': 'satisfactionChart',
+      '004': 'conversionRateChart',
+      '005': 'complianceChart',
+      '006': 'knowledgeSystemChart',
+      '007': 'developmentChart',
+      '008': 'communicationChart',
+      '009': 'reachGrowthChart',
+      '010': 'mediaProductionChart'
+    };
+    
+    // مصفوفة لترتيب المؤشرات (حل جذري للمشكلة)
+    // إذا فشل الكود في قراءة اسم العمود (001)، سيستخدم هذا الترتيب لربط العمود الأول بالمؤشر المالي تلقائياً
+    const indexMapping = [
+      'financialGrowthChart', // العمود الأول -> 001
+      'customerGrowthChart',  // العمود الثاني -> 002
+      'satisfactionChart',    // العمود الثالث -> 003
+      'conversionRateChart',  // العمود الرابع -> 004
+      'complianceChart',      // العمود الخامس -> 005
+      'knowledgeSystemChart', // العمود السادس -> 006
+      'developmentChart',     // العمود السابع -> 007
+      'communicationChart',   // العمود الثامن -> 008
+      'reachGrowthChart',     // العمود التاسع -> 009
+      'mediaProductionChart'  // العمود العاشر -> 010
+    ];
+
+    const targetHeaders = targetLines.shift();
+    const targets = {};
+    targetLines.forEach(line => {
+      // تعديل: قراءة رمز المؤشر من العمود B (index 1) حسب الهيكلة الجديدة
+      let kpiId = String(line[1] || '').trim();
+      // استخراج الرقم من النص (يحل مشكلة إذا كان العنوان يحتوي على نص مثل "001 - المالي")
+      const match = kpiId.match(/(\d+)/);
+      if (match) {
+        kpiId = String(parseInt(match[0], 10)).padStart(3, '0');
+      }
+      if (idMapping[kpiId]) kpiId = idMapping[kpiId];
+      // تعديل: قراءة المستهدف من العمود E (index 4)
+      const tVal = parseFloat(line[4]);
+      const mVal = parseFloat(line[5]);
+      targets[kpiId] = {
+        target: isNaN(tVal) ? null : tVal,
+        max: isNaN(mVal) ? null : mVal
+      };
+    });
+
+    chartDataStore.fullLabels = dataLines.map(line => line[0]).filter(label => label); // Filter out empty rows
+
+    headers.slice(1).forEach((rawKpiId, index) => {
+      let kpiId = String(rawKpiId).trim();
+      // استخراج الرقم من النص (يحل مشكلة إذا كان العنوان يحتوي على نص مثل "001 - المالي")
+      const match = kpiId.match(/(\d+)/);
+      if (match) {
+        kpiId = String(parseInt(match[0], 10)).padStart(3, '0');
+      }
+      if (idMapping[kpiId]) kpiId = idMapping[kpiId];
+      
+      // إصلاح: إذا لم يتم التعرف على المؤشر من الاسم (بسبب خطأ في الكتابة أو التنسيق)، نعتمد على ترتيب العمود
+      if (!indexMapping.includes(kpiId) && index < indexMapping.length) {
+        kpiId = indexMapping[index];
+      }
+
+      // تحديد المؤشرات التي يُسمح فيها بقيمة صفر (مثل الأعداد)، أما النسب المئوية فالصفر يعني عدم وجود بيانات
+      const allowZeroKPIs = ['financialGrowthChart', 'communicationChart', 'mediaProductionChart', 'knowledgeSystemChart', 'developmentChart'];
+      const shouldFilterZero = !allowZeroKPIs.includes(kpiId);
+
+      chartDataStore[kpiId] = {
+        // تحويل الخلايا الفارغة في الشيت إلى 'null' بدلاً من '0'
+        // هذا يسمح لنا بالتمييز بين شهر لم يُعبأ بعد وشهر قيمته الفعلية صفر
+        data: dataLines.map(line => {
+          const val = line[index + 1];
+          if (val === '' || val === undefined || val === null) return null;
+          const parsed = parseFloat(val);
+          // إذا كان المؤشر نسبة مئوية والقيمة 0، نعتبرها null (بيانات مستقبلية) لكي لا ينزل الخط للصفر
+          return (shouldFilterZero && parsed === 0) ? null : parsed;
+        }),
+        target: targets[kpiId]?.target,
+        max: targets[kpiId]?.max
+      };
+    });
+
+    // Store summary data as well
+    chartDataStore.summary = jsonData.summary;
+  }
+
+  function animateBarsOnScroll() {
+    const statsLayoutContainer = document.querySelector('.stats-layout-container');
+    if (!statsLayoutContainer) return;
+
+    const observer = new IntersectionObserver((entries, observer) => {
+      const [entry] = entries;
+      if (!entry.isIntersecting) return;
+
+      const percentRows = document.querySelectorAll('.percent-row');
+      let sum = 0;
+      let count = 0;
+      percentRows.forEach(row => {
+        const val = parseInt(row.dataset.value) || 0;
+        row.querySelector('.percent-fill').style.width = val + '%';
+        row.querySelector('.percent-value').textContent = val + '%';
+        sum += val;
+        count++;
+      });
+
+      const average = count > 0 ? Math.round(sum / count) : 0;
+      document.getElementById('totalPercent').textContent = average + '%';
+      drawCircle('totalChart', average, '#c9a04b');
+
+      observer.unobserve(statsLayoutContainer); // Stop observing after animation
+    }, { threshold: 0.4 });
+
+    observer.observe(statsLayoutContainer);
+  }
+
+  // --- Populate Month Dropdowns ---
+  function populateMonthDropdowns() {
+    const months = chartDataStore.fullLabels;
+    if (!months || months.length === 0) return;
+
+    document.querySelectorAll('.custom-options').forEach(container => {
+      container.innerHTML = '';
+      months.forEach((month, index) => {
+        const div = document.createElement('div');
+        div.className = 'custom-option';
+        div.textContent = month;
+        div.dataset.index = index;
+        container.appendChild(div);
+      });
+    });
+  }
+
+  // --- Centralized Chart Initialization ---
+  function initializeAllCharts() {
+    // تنظيف جميع المخططات السابقة قبل إعادة الرسم (ضروري عند التحديث من الكاش)
+    const chartIds = [
+      'financialGrowthChart', 'customerGrowthChart', 'satisfactionChart', 
+      'conversionRateChart', 'complianceChart', 'knowledgeSystemChart', 
+      'developmentChart', 'communicationChart', 'reachGrowthChart', 'mediaProductionChart'
+    ];
+    chartIds.forEach(id => {
+      const chart = Chart.getChart(id);
+      if (chart) chart.destroy();
+    });
+
+    // --- Financial Growth Line Chart (KPI 001) ---
+    const financialChartCtx = document.getElementById('financialGrowthChart').getContext('2d');
+    if (financialChartCtx) {
+      const gradient = financialChartCtx.createLinearGradient(0, 50, 0, 350);
+      gradient.addColorStop(0, 'rgba(11, 43, 68, 0.6)');
+      gradient.addColorStop(1, 'rgba(11, 43, 68, 0)');
+
+      const financialChart = new Chart(financialChartCtx, {
+        type: 'line',
+        data: {
+          labels: [], // Initially empty
+          datasets: [
+            {
+              label: 'الأداء الفعلي',
+              data: [], // Initially empty
+              borderColor: 'var(--navy)',
+              backgroundColor: gradient,
+              borderWidth: 3,
+              pointBackgroundColor: 'var(--gold)',
+              pointBorderColor: 'var(--navy)',
+              pointHoverBackgroundColor: '#fff',
+              pointHoverBorderColor: 'var(--gold)',
+              pointRadius: 5,
+              pointHoverRadius: 8,
+              tension: 0.4, // لجعل الخط منحنياً
+              fill: true,
+            },
+            {
+              label: 'المستهدف',
+              data: [],
+              borderColor: 'var(--gold)',
+              borderDash: [5, 5],
+              borderWidth: 2,
+              pointRadius: 0,
+              pointHoverRadius: 0,
+              fill: false,
+              tension: 0,
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: { position: 'top' },
+            tooltip: {
+              callbacks: {
+                label: (context) => `${context.dataset.label}: ${context.parsed.y}%`
+              }
+            }
+          },
+          scales: {
+            y: { beginAtZero: true, ticks: { callback: value => value + '%' } },
+            x: {}
+          }
+        }
+      });
+    }
+
+    // --- Customer Growth Bar Chart (KPI 002) ---
+    const customerChartCtx = document.getElementById('customerGrowthChart').getContext('2d');
+    if (customerChartCtx) {
+      new Chart(customerChartCtx, {
+        type: 'bar',
+        data: {
+          labels: [],
+          datasets: [
+            {
+              label: 'الأداء الفعلي',
+              data: [],
+              backgroundColor: 'var(--gold)',
+              borderColor: 'var(--gold-2)',
+              borderWidth: 2,
+              borderRadius: 5,
+              barThickness: 30,
+              order: 2
+            },
+            {
+              label: 'المستهدف',
+              data: [],
+              type: 'line',
+              borderColor: 'var(--navy)',
+              borderDash: [5, 5],
+              borderWidth: 2,
+              pointRadius: 0,
+              fill: false,
+              order: 1
+            }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: { position: 'top' },
+            tooltip: {
+              callbacks: { label: (context) => `${context.dataset.label}: ${context.parsed.y}%` }
+            }
+          },
+          scales: {
+            y: { beginAtZero: true, ticks: { callback: value => value + '%' } },
+            x: { grid: { display: false } }
+          }
+        }
+      });
+    }
+
+    // --- Customer Satisfaction Chart (KPI 003) ---
+    const satisfactionCtx = document.getElementById('satisfactionChart')?.getContext('2d');
+    if (satisfactionCtx) {
+      new Chart(satisfactionCtx, {
+        type: 'line',
+        data: {
+          labels: [],
+          datasets: [
+            {
+              label: 'الأداء الفعلي',
+              data: [],
+              borderColor: 'var(--gold)',
+              backgroundColor: 'rgba(201, 160, 75, 0.1)',
+              fill: true,
+              tension: 0.4,
+              pointRadius: 5,
+              pointBackgroundColor: 'var(--gold)',
+            },
+            {
+              label: 'المستهدف',
+              data: [],
+              borderColor: 'var(--navy)',
+              borderDash: [5, 5], // Creates a dashed line
+              borderWidth: 2,
+              pointRadius: 3,
+              pointHoverRadius: 5,
+              fill: false,
+              tension: 0.4,
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: { position: 'top' },
+            tooltip: {
+              callbacks: { label: (context) => `${context.dataset.label}: ${context.parsed.y}%` }
+            }
+          },
+          scales: {
+            y: { beginAtZero: true, ticks: { callback: (value) => value + '%' } },
+            x: { grid: { display: false } }
+          }
+        }
+      });
+    }
+
+    // --- Conversion Rate Chart (KPI 004) ---
+    const conversionCtx = document.getElementById('conversionRateChart')?.getContext('2d');
+    if (conversionCtx) {
+      new Chart(conversionCtx, {
+        type: 'bar',
+        data: {
+          labels: [],
+          datasets: [
+            {
+              label: 'الأداء الفعلي',
+              data: [],
+              backgroundColor: 'rgba(11, 43, 68, 0.8)',
+              borderColor: 'var(--navy)',
+              borderWidth: 1,
+              borderRadius: 5,
+              order: 2
+            },
+            {
+              label: 'المستهدف',
+              data: [],
+              type: 'line',
+              borderColor: 'var(--gold)',
+              borderDash: [5, 5],
+              borderWidth: 2,
+              pointRadius: 0,
+              fill: false,
+              order: 1
+            }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: { position: 'top' },
+            tooltip: {
+              callbacks: { label: (context) => `${context.dataset.label}: ${context.parsed.y}%` }
+            }
+          },
+          scales: {
+            y: { beginAtZero: true, ticks: { callback: value => value + '%' } },
+            x: { grid: { display: false } }
+          }
+        }
+      });
+    }
+
+    // --- Internal Operations Compliance Chart (KPI 005) ---
+    const complianceCtx = document.getElementById('complianceChart')?.getContext('2d');
+    if (complianceCtx) {
+      new Chart(complianceCtx, {
+        type: 'line',
+        data: {
+          labels: [],
+          datasets: [
+            {
+              label: 'الأداء الفعلي',
+              data: [],
+              borderColor: '#28a745', // A green color for compliance
+              backgroundColor: 'rgba(40, 167, 69, 0.1)',
+              fill: true,
+              tension: 0.4,
+              pointRadius: 5,
+              pointBackgroundColor: '#28a745',
+            },
+            {
+              label: 'المستهدف',
+              data: [],
+              borderColor: 'var(--navy)',
+              borderDash: [5, 5],
+              borderWidth: 2,
+              pointRadius: 0,
+              fill: false,
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: { position: 'top' },
+            tooltip: {
+              callbacks: { label: (context) => `${context.dataset.label}: ${context.parsed.y}%` }
+            }
+          },
+          scales: {
+            y: { beginAtZero: true, ticks: { callback: (value) => value + '%' } },
+            x: { grid: { display: false } }
+          }
+        }
+      });
+    }
+
+    // --- Knowledge System Chart (KPI 006) ---
+    const knowledgeCtx = document.getElementById('knowledgeSystemChart')?.getContext('2d');
+    if (knowledgeCtx) {
+      new Chart(knowledgeCtx, {
+        type: 'line',
+        data: {
+          labels: [],
+          datasets: [
+            {
+              label: 'الأداء الفعلي',
+              data: [],
+              borderColor: '#007bff', // A blue color for knowledge/system
+              backgroundColor: 'rgba(0, 123, 255, 0.1)',
+              fill: true,
+              tension: 0.4,
+              pointRadius: 5,
+              pointBackgroundColor: '#007bff',
+            },
+            {
+              label: 'المستهدف',
+              data: [],
+              borderColor: 'var(--navy)',
+              borderDash: [5, 5],
+              borderWidth: 2,
+              pointRadius: 0,
+              fill: false,
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: { position: 'top' },
+            tooltip: {
+              callbacks: { label: (context) => `${context.dataset.label}: ${context.parsed.y}` }
+            }
+          },
+          scales: {
+            y: { beginAtZero: true, title: { display: true, text: 'عدد' } },
+            x: { grid: { display: false } }
+          }
+        }
+      });
+    }
+
+    // --- Growth and Development Chart (KPI 007) ---
+    const developmentCtx = document.getElementById('developmentChart')?.getContext('2d');
+    if (developmentCtx) {
+      new Chart(developmentCtx, {
+        type: 'line',
+        data: {
+          labels: [],
+          datasets: [
+            {
+              label: 'الأداء الفعلي',
+              data: [],
+              borderColor: '#17a2b8', // A teal color for development
+              backgroundColor: 'rgba(23, 162, 184, 0.1)',
+              fill: true,
+              tension: 0.4,
+              pointRadius: 5,
+              pointBackgroundColor: '#17a2b8',
+            },
+            {
+              label: 'المستهدف',
+              data: [],
+              borderColor: 'var(--navy)',
+              borderDash: [5, 5],
+              borderWidth: 2,
+              pointRadius: 0,
+              fill: false,
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: { position: 'top' },
+            tooltip: {
+              callbacks: { label: (context) => `${context.dataset.label}: ${context.parsed.y}` }
+            }
+          },
+          scales: {
+            y: { beginAtZero: true, title: { display: true, text: 'عدد' } },
+            x: { grid: { display: false } }
+          }
+        }
+      });
+    }
+
+    // --- Internal Communication Chart (KPI 008) ---
+    const communicationCtx = document.getElementById('communicationChart')?.getContext('2d');
+    if (communicationCtx) {
+      new Chart(communicationCtx, {
+        type: 'line',
+        data: {
+          labels: [],
+          datasets: [
+            {
+              label: 'الأداء الفعلي',
+              data: [],
+              borderColor: '#6f42c1', // A purple color for communication
+              backgroundColor: 'rgba(111, 66, 193, 0.1)',
+              fill: true,
+              tension: 0.4,
+              pointRadius: 5,
+              pointBackgroundColor: '#6f42c1',
+            },
+            {
+              label: 'المستهدف',
+              data: [],
+              borderColor: 'var(--navy)',
+              borderDash: [5, 5],
+              borderWidth: 2,
+              pointRadius: 0,
+              fill: false,
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: { position: 'top' },
+            tooltip: {
+              callbacks: { 
+                label: (context) => `${context.dataset.label}: ${context.parsed.y}%` 
+              }
+            }
+          },
+          scales: {
+            y: { 
+              beginAtZero: true,
+              ticks: { callback: value => value + '%' }
+            },
+            x: { grid: { display: false } }
+          }
+        }
+      });
+    }
+
+    // --- Qualified Reach Growth Chart (KPI 009) ---
+    const reachCtx = document.getElementById('reachGrowthChart')?.getContext('2d');
+    if (reachCtx) {
+      new Chart(reachCtx, {
+        type: 'bar',
+        data: {
+          labels: [],
+          datasets: [
+            {
+              label: 'الأداء الفعلي',
+              data: [],
+              backgroundColor: 'rgba(253, 126, 20, 0.8)',
+              borderColor: '#fd7e14',
+              borderWidth: 1,
+              borderRadius: 5,
+              order: 2
+            },
+            {
+              label: 'المستهدف',
+              data: [],
+              type: 'line',
+              borderColor: 'var(--navy)',
+              borderDash: [5, 5],
+              borderWidth: 2,
+              pointRadius: 0,
+              fill: false,
+              order: 1
+            }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: { position: 'top' },
+            tooltip: {
+              callbacks: { label: (context) => `${context.dataset.label}: ${context.parsed.y}%` }
+            }
+          },
+          scales: {
+            y: { 
+              beginAtZero: true, 
+              ticks: { callback: value => value + '%' },
+              title: { display: true, text: 'معدل النمو التراكمي' }
+            },
+            x: { grid: { display: false } }
+          }
+        }
+      });
+    }
+
+    // --- Media Production Chart (KPI 010) ---
+    const mediaCtx = document.getElementById('mediaProductionChart')?.getContext('2d');
+    if (mediaCtx) {
+      new Chart(mediaCtx, {
+        type: 'bar',
+        data: {
+          labels: [],
+          datasets: [
+            {
+              label: 'الأداء الفعلي',
+              data: [],
+              backgroundColor: 'rgba(255, 193, 7, 0.8)',
+              borderColor: '#ffc107',
+              borderWidth: 1,
+              borderRadius: 5,
+              order: 2,
+            },
+            {
+              label: 'المستهدف',
+              data: [],
+              type: 'line',
+              borderColor: 'var(--navy)',
+              borderDash: [5, 5],
+              borderWidth: 2,
+              pointRadius: 0,
+              fill: false,
+              order: 1,
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: { position: 'top' },
+            tooltip: {
+              callbacks: { label: (context) => `${context.dataset.label}: ${context.parsed.y}` }
+            }
+          },
+          scales: {
+            y: { beginAtZero: true, title: { display: true, text: 'عدد المنتجات' } },
+            x: { grid: { display: false } }
+          }
+        }
+      });
+    }
+
+    // Set initial range for all charts
+    chartIds.forEach(id => updateChartRange(id, 6));
+
+    // Update summary cards at the end
+    updateSummaryCards();
+  }
+
+  function updateChartRange(chartId, months) {
+    const chart = Chart.getChart(chartId);
+    const chartData = chartDataStore[chartId];
+    if (!chart || !chartData) return;
+
+    const range = (months === 12) ? chartDataStore.fullLabels.length : months;
+
+    // Slice the data to get the last 'range' of months
+    const slicedLabels = chartDataStore.fullLabels.slice(-range);
+    const slicedData = chartData.data.slice(-range);
+
+    chart.data.labels = slicedLabels;
+    if(chart.data.datasets[0]) chart.data.datasets[0].data = slicedData;
+
+    // Update target line if it exists
+    if (chart.data.datasets.length > 1 && chartData.target !== null && chartData.target !== undefined) {
+      chart.data.datasets[1].data = Array(slicedLabels.length).fill(chartData.target);
+    }
+
+    chart.update();
+  }
+
+  function updateChartToSpecificMonth(chartId, index) {
+    const chart = Chart.getChart(chartId);
+    const kpiData = chartDataStore[chartId];
+    if (!chart || !kpiData) return;
+
+    // Handle null values gracefully by showing 0
+    const value = kpiData.data[index] === null ? 0 : kpiData.data[index];
+
+    // Show only that specific month
+    chart.data.labels = [chartDataStore.fullLabels[index]];
+    if(chart.data.datasets[0]) chart.data.datasets[0].data = [kpiData.data[index]];
+
+    // Update target line if it exists
+    if (chart.data.datasets.length > 1 && kpiData.target !== null && kpiData.target !== undefined) {
+      chart.data.datasets[1].data = [kpiData.target];
+    }
+    chart.update();
+  }
+
+  // --- Event Listeners Setup ---
+  function setupEventListeners() {
+    // Dropdown click listener
+    document.addEventListener('click', function(e) {
+      const btn = e.target.closest('.select-month-btn');
+      if (btn) {
+        const wrapper = btn.closest('.custom-select-wrapper');
+        const options = wrapper.querySelector('.custom-options');
+        document.querySelectorAll('.custom-options').forEach(el => {
+          if (el !== options) el.classList.remove('show');
+        });
+        options.classList.toggle('show');
+      } else if (e.target.closest('.custom-option')) {
+        const option = e.target.closest('.custom-option');
+        const index = parseInt(option.dataset.index, 10);
+        const chartId = option.closest('.range-selector').dataset.chart;
+        updateChartToSpecificMonth(chartId, index);
+        option.closest('.custom-options').classList.remove('show');
+        const selector = option.closest('.range-selector');
+        selector.querySelectorAll('.range-btn').forEach(b => b.classList.remove('active'));
+        const dropdownBtn = selector.querySelector('.select-month-btn');
+        dropdownBtn.classList.add('active');
+        dropdownBtn.textContent = option.textContent;
+      } else {
+        if (!e.target.closest('.custom-select-wrapper')) {
+          document.querySelectorAll('.custom-options').forEach(el => el.classList.remove('show'));
+        }
+      }
+    });
+
+    // Range selector listener
+    document.querySelectorAll('.range-selector').forEach(selector => {
+      selector.addEventListener('click', function(e) {
+        if (e.target.closest('.custom-select-wrapper')) return;
+        if (e.target.classList.contains('range-btn')) {
+          const range = e.target.dataset.range;
+          const chartId = this.dataset.chart;
+          this.querySelectorAll('.range-btn.active').forEach(btn => btn.classList.remove('active'));
+          const dropdownBtn = this.querySelector('.select-month-btn');
+          if (dropdownBtn) dropdownBtn.textContent = 'شهر محدد ▾';
+          e.target.classList.add('active');
+          updateChartRange(chartId, parseInt(range));
+        }
+      });
+    });
+  }
+
+  // --- Initial Execution ---
+  document.body.classList.add('fade-in');
+  fetchDataAndInit();
+  setupEventListeners();
+});
+</script>
+</body>
+</html>
